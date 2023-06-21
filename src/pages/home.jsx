@@ -12,7 +12,7 @@ import {
   Legend
 } from "recharts";
 import { ResponsiveBar } from '@nivo/bar';
-//import React, { useState, useEffect } from "react";
+import dayjs from 'dayjs'; // ES 2015
 
 
 // Our language strings for the header
@@ -223,14 +223,18 @@ export default function Home() {
   };
   
   
- const [movie, setMovie] = React.useState([]);
+ const [game, setGame] = React.useState([]);
+const [gameWhen, setGameWhen] = React.useState([]);
 
    React.useEffect(() => {
       fetch('https://nostalgic-pollen-antimatter.glitch.me/data')
          .then((res) => res.json())
          .then((movieData) => {
             console.log(movieData);
-            setMovie(movieData.title);
+            setGame(movieData[0].gameName);
+          let day = dayjs(movieData[0].timestamp);
+          console.log(day.isValid());
+            setGameWhen(day.format('DD/MM/YYYY [at] h:m A'));
          })
          .catch((err) => {
             console.log(err.message);
@@ -260,7 +264,8 @@ export default function Home() {
         </animated.div>
       </div>
       
-      <h3>Movie: {movie}</h3>
+      <h3>Latest game Chris played: {game} </h3>
+      <h4>played at: {gameWhen}</h4>
       
       
             Courtney boobs by day
