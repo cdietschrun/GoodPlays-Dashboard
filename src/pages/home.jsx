@@ -12,6 +12,8 @@ import {
   Legend
 } from "recharts";
 import { ResponsiveBar } from '@nivo/bar';
+//import React, { useState, useEffect } from "react";
+
 
 // Our language strings for the header
 const strings = [
@@ -22,8 +24,10 @@ const strings = [
   "Hej React"
 ];
 
+//import { MongoClient } from "mongodb";
 
-// Utility function to choose a random value from the language array
+
+// Utility function to choose a random value from the language arraya
 function randomLanguage() {
   return strings[Math.floor(Math.random() * strings.length)];
 }
@@ -35,7 +39,16 @@ function randomLanguage() {
 * The function in app.jsx defines the page wrapper that this appears in along with the footer
 */
 
+  //const uri = `mongodb+srv://cdietschrunfast:${process.env.MONGO_DB_PASSWORD}@goodplays.yhu6h4r.mongodb.net/?retryWrites=true&w=majority`;
+//const mongoClient = new MongoClient(uri);
+
+
 export default function Home() {
+
+
+//run().catch(console.dir);
+//console.log('testhey');
+  
   /* We use state to set the hello string from the array https://reactjs.org/docs/hooks-state.html
      - We'll call setHello when the user clicks to change the string
   */
@@ -200,17 +213,34 @@ export default function Home() {
 
   // When the user clicks we change the header language
   const handleChangeHello = () => {
+  
     
-    // Choose a new Hello from our languages
+    // Choose a new Hello from our languages1
     const newHello = randomLanguage();
     
-    // Call the function to set the state string in our component
+    // Call the function to set the state string in our component1
     setHello(newHello);
   };
+  
+  
+ const [movie, setMovie] = React.useState([]);
+
+   React.useEffect(() => {
+      fetch('https://nostalgic-pollen-antimatter.glitch.me/data')
+         .then((res) => res.json())
+         .then((movieData) => {
+            console.log(movieData);
+            setMovie(movieData.title);
+         })
+         .catch((err) => {
+            console.log(err.message);
+         });
+   }, []);
+  
   return (
     <>
       <h1 className="title">{hello}!</h1>
-      {/* When the user hovers over the image we apply the wiggle style to it */}
+      {/* When the user hovers over the image we apply the wiggle style to i1t */}
       <animated.div onMouseEnter={trigger} style={style}>
         <img
           src="https://cdn.glitch.com/2f80c958-3bc4-4f47-8e97-6a5c8684ac2c%2Fillustration.svg?v=1618196579405"
@@ -229,6 +259,8 @@ export default function Home() {
           </a>
         </animated.div>
       </div>
+      
+      <h3>Movie: {movie}</h3>
       
       
             Courtney boobs by day
