@@ -234,7 +234,7 @@ const [gameWhen, setGameWhen] = React.useState([]);
             setGame(movieData[0].gameName);
           let day = dayjs(movieData[0].timestamp);
           console.log(day.isValid());
-            setGameWhen(day.format('DD/MM/YYYY [at] h:m A'));
+            setGameWhen(day.format('DD/MM/YYYY [at] h:mm A'));
          })
          .catch((err) => {
             console.log(err.message);
