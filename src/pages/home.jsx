@@ -13,11 +13,12 @@ import {
 } from "recharts";
 import { ResponsiveBar } from '@nivo/bar';
 import dayjs from 'dayjs'; // ES 2015
-
+import duration from 'dayjs/plugin/duration';
+dayjs.extend(duration);
 
 // Our language strings for the header
 const strings = [
-  "Hello React",
+  "Hello Courtney",
   "Salut React",
   "Hola React",
   "안녕 React",
@@ -225,6 +226,8 @@ export default function Home() {
   
  const [game, setGame] = React.useState([]);
 const [gameWhen, setGameWhen] = React.useState([]);
+  const [active, setActive] = React.useState(false);
+  const [duration, setDuration] = React.useState([]);
 
    React.useEffect(() => {
       fetch('https://nostalgic-pollen-antimatter.glitch.me/data')
@@ -232,9 +235,27 @@ const [gameWhen, setGameWhen] = React.useState([]);
          .then((movieData) => {
             console.log(movieData);
             setGame(movieData[0].gameName);
-          let day = dayjs(movieData[0].timestamp);
+          let day = dayjs(movieData[0].startTimestamp);
           console.log(day.isValid());
             setGameWhen(day.format('DD/MM/YYYY [at] h:mm A'));
+          if (movieData[0].endTimestamp == null)
+            {
+              setActive(true);
+            }
+          else
+            {
+              console.log(movieData[0]);
+              let end = dayjs(movieData[0].endTimestamp);
+              const delta = end - day;
+              const formatted = dayjs.duration(delta, 'm');
+              console.log(formatted);
+              //setDuration(formatted);
+              const diffH = end.diff(day, 'h');
+              const diff = end.diff(day, 'm');
+              const diffs = end.diff(day, 's');
+              
+              setDuration(diff);
+            }
          })
          .catch((err) => {
             console.log(err.message);
@@ -245,50 +266,43 @@ const [gameWhen, setGameWhen] = React.useState([]);
     <>
       <h1 className="title">{hello}!</h1>
       {/* When the user hovers over the image we apply the wiggle style to i1t */}
-      <animated.div onMouseEnter={trigger} style={style}>
-        <img
-          src="https://cdn.glitch.com/2f80c958-3bc4-4f47-8e97-6a5c8684ac2c%2Fillustration.svg?v=1618196579405"
-          className="illustration"
-          onClick={handleChangeHello}
-          alt="Illustration click to change language"
-        />
-      </animated.div>
+  
+      {
+      //<animated.div onMouseEnter={trigger} style={style}>
+//        <img
+//          src="https://cdn.glitch.com/2f80c958-3bc4-4f47-8e97-6a5c8684ac2c%2Fillustration.svg?v=1618196579405"
+//          className="illustration"
+//          onClick={handleChangeHello}
+//          alt="Illustration click to change language"
+//        />
+//      </animated.div>
+        }
 
 
-      <div className="navigation">
-        {/* When the user hovers over this text, we apply the wiggle function to the image style */}
-        <animated.div onMouseEnter={trigger}>
-          <a className="btn--click-me" onClick={handleChangeHello}>
-            //
-          </a>
-        </animated.div>
-      </div>
+      { 
+        //<div className="navigation">
+        //{/* When the user hovers over this text, we apply the wiggle function to the image style */}
+        //<animated.div onMouseEnter={trigger}>
+//          <a className="btn--click-me" onClick={handleChangeHello}>
+//            //
+//          </a>
+//        </animated.div>
+//      </div>
+      }
       
       <h3>Latest game Chris played: {game} </h3>
       <h4>played at: {gameWhen}</h4>
+      <h4>actively playing? {active ? "yes" : "no"}</h4>
+      <h4>played for {duration} minute {duration > 1}</h4>
       
       
-            Courtney boobs by day
+      <h3>Also I sent $130 today 💸 💕</h3>
       
-        <BarChart
-          width={700}
-          height={300}
-          data={data}
-          margin={{
-            top: 20,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="name" />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-          <Bar dataKey="leftBoob" stackId="a" fill="#8884d8" />
-          <Bar dataKey="rightBoob" stackId="a" fill="#82ca9d" />
-        </BarChart>
+      
+      
+      <br/>
+      
+  
       
       
       ___
