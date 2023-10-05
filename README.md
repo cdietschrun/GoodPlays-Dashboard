@@ -1,3 +1,7 @@
+GoodPlays Dashboard
+
+[![Azure Static Web Apps CI/CD](https://github.com/cdietschrun/GoodPlays-Dashboard/actions/workflows/azure-static-web-apps-ashy-coast-0f0e9310f.yml/badge.svg?branch=main)](https://github.com/cdietschrun/GoodPlays-Dashboard/actions/workflows/azure-static-web-apps-ashy-coast-0f0e9310f.yml)
+
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
@@ -44,3 +48,4 @@ You don’t have to ever use `eject`. The curated feature set is suitable for sm
 You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
 To learn React, check out the [React documentation](https://reactjs.org/).
+
