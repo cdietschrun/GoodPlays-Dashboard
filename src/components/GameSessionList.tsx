@@ -1,16 +1,11 @@
 import "../styles/GameSessionList.css";
 
-import React from "react";
+import React, { useContext } from "react";
 import GameSessionCard from "./GameSessionCard";
-import { GameSession } from "../models/GameSession";
+import { GameSessionsContext } from "../models/GameSessionContext";
 
-interface GameSessionListProps {
-  gameSessions: GameSession[];
-}
-
-const GameSessionList: React.FC<GameSessionListProps> = ({ gameSessions }) => {
-  // Slice the gameSessions array to show the latest 10 entries
-  //const latestGameSessions = gameSessions.slice(0, 10);
+const GameSessionList: React.FC = () => {
+  const { gameSessions } = useContext(GameSessionsContext);
 
   const gamesPerPage = 5;
   const totalPages = Math.ceil(gameSessions.length / gamesPerPage);
