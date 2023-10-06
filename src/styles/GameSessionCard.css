@@ -1,0 +1,34 @@
+/* GameSessionCard.css (You can create a separate CSS file) */
+
+.game-session-card {
+    border: 2px solid #333; /* Border around the card */
+    background-color: #fff; /* Card background color */
+    padding: 16px; /* Padding inside the card */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Shadow for a raised effect */
+    margin: 16px; /* Margin between cards */
+    display: inline-block; /* Display cards in a row */
+    vertical-align: top; /* Align cards to the top */
+    width: 60%; /* Make each card fill the horizontal space */
+  }
+  
+  .game-session-card h2 {
+    font-size: 18px; /* Heading font size */
+    margin-top: 0; /* Remove top margin for heading */
+    color: #333; /* Heading color */
+  }
+  
+  .game-session-card p {
+    margin: 8px 0; /* Margin between paragraphs */
+    color: #666; /* Text color */
+  }
+  
+  .session-duration {
+    font-weight: bold; /* Make the duration text bold */
+  }
+  
+  .duration-text {
+    color: #ff5722; /* Customize the color to your preference */
+    font-size: 18px; /* Customize the font size */
+    /* Add other styling as needed */
+  }

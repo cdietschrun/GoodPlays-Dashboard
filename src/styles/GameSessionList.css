@@ -1,0 +1,42 @@
+/* GameSessionList.css */
+.game-session-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  h1 {
+    margin-top: 20px;
+  }
+  
+  .game-session-card-container {
+    max-height: 550px; /* Adjust the height as needed */
+    overflow-y: auto; /* Enable vertical scrolling if content overflows */
+    width: 100%;
+  }
+  
+  .pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  
+  .pagination button {
+    padding: 5px 10px;
+    margin: 0 5px;
+    background-color: #004690;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease-in-out;
+  }
+  
+  .pagination button:hover {
+    background-color: #0056b3;
+  }
+  
+  .pagination button.active {
+    background-color: #0056b3;
+  }
+  
