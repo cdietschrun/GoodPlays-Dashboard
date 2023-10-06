@@ -7,6 +7,9 @@ const Navigation: React.FC = () => {
   return (
     <nav className="navbar">
       <ul className="navbar-menu">
+        <Link to="/">
+          <img src="gpLogo.png" alt="Logo" />
+        </Link>
         <li className="navbar-item">
           <Link to="/">Game Sessions</Link>
         </li>
