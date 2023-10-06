@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Home from "./components/Home";
+import HomePage from "./components/HomePage";
 import Callback from "./components/Callback";
 import Navigation from "./components/Navigation";
 import { useEffect, useState } from "react";
@@ -8,6 +8,7 @@ import ChartNavigation from "./components/ChartsNavigation";
 import { GameSession } from "./models/GameSession";
 import GamePieChartPage from "./components/GamePieChartPage";
 import GameTreeMapChartPage from "./components/GameTreeMapChartPage";
+import SettingsPage from "./components/SettingsPage";
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
@@ -40,10 +41,12 @@ function App() {
           <Navigation />
 
           <Routes>
-            <Route path="/" element={<Home />} />
+            <Route path="/" element={<HomePage />} />
             <Route path="/charts" element={<ChartNavigation />} />
             <Route path="/charts/pie" element={<GamePieChartPage />} />
             <Route path="/charts/treemap" element={<GameTreeMapChartPage />} />
+
+            <Route path="/settings" element={<SettingsPage />} />
           </Routes>
         </div>
       </Router>

@@ -1,7 +1,7 @@
 import React from "react";
 import GameSessionList from "./GameSessionList";
 
-const Home: React.FC = () => {
+const HomePage: React.FC = () => {
   // const handleLogin = () => {
   //   const redirectUri =
   //     process.env.NODE_ENV === "development"
@@ -39,4 +39,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default HomePage;

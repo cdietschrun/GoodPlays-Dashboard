@@ -18,6 +18,10 @@
     margin: 12.5px;
     padding: 0;
   }
+
+  .navbar-item-right {
+    margin-left: auto;
+  }
   
   .navbar-item a {
     color: #fff;
