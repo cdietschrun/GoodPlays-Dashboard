@@ -2,14 +2,14 @@ import React from "react";
 import GameSessionList from "./GameSessionList";
 
 const Home: React.FC = () => {
-  const handleLogin = () => {
-    const redirectUri =
-      process.env.NODE_ENV === "development"
-        ? process.env.REACT_APP_REDIRECT_URI_DEV
-        : process.env.REACT_APP_REDIRECT_URI_PROD;
+  // const handleLogin = () => {
+  //   const redirectUri =
+  //     process.env.NODE_ENV === "development"
+  //       ? process.env.REACT_APP_REDIRECT_URI_DEV
+  //       : process.env.REACT_APP_REDIRECT_URI_PROD;
 
-    window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
-  };
+  //   window.location.href = `https://discord.com/api/oauth2/authorize?client_id=${process.env.DISCORD_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&scope=identify`;
+  // };
 
   // return (
   //   <div>

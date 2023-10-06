@@ -11,11 +11,10 @@ import GameTreeMapChartPage from "./components/GameTreeMapChartPage";
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
-  const userId = "131989430171992064";
-  const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;
 
   useEffect(() => {
-    // Function to fetch game sessions from the API
+    const userId = "131989430171992064";
+    const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;
     const fetchGameSessions = async () => {
       try {
         const response = await fetch(apiUrl);

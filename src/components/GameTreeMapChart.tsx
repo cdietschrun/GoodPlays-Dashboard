@@ -8,18 +8,6 @@ type Data = {
   value: number;
 };
 
-function generateSampleData(): Data[] {
-  const data: Data[] = [];
-
-  for (let i = 0; i < 10; i++) {
-    const name = `Category ${i + 1}`;
-    const value = Math.floor(Math.random() * 100);
-    data.push({ name, value });
-  }
-
-  return data;
-}
-
 function transformData(gameSessions: GameSession[]): Data[] {
   const data: Data[] = [];
 
@@ -39,11 +27,11 @@ function transformData(gameSessions: GameSession[]): Data[] {
 
 const GameTreeMapChart: React.FC = () => {
   const { gameSessions } = useContext(GameSessionsContext);
-  // const data = generateSampleData();
-  const data = transformData(gameSessions);
   const ref = useRef<SVGSVGElement>(null);
 
   useEffect(() => {
+    const data = transformData(gameSessions);
+
     if (ref.current) {
       const svg = d3.select(ref.current);
 
@@ -98,7 +86,7 @@ const GameTreeMapChart: React.FC = () => {
           }
         });
     }
-  }, []);
+  });
 
   return <svg ref={ref} width={1024} height={1024}></svg>;
 };
