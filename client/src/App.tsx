@@ -24,7 +24,7 @@ function App() {
 
   useEffect(() => {
     const userId = "131989430171992064";
-    //const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;
+    //const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;a
     const apiUrl = `/data?userId=${userId}`;
     const fetchGameSessions = async () => {
       try {

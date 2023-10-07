@@ -6,6 +6,8 @@ import cors from 'cors';
 //import { startOrEndGame } from './events/presenceUpdate.js';
 import axios from 'axios';
 import path from 'path';
+import { getGlobals } from 'common-es'
+const { __dirname, __filename } = getGlobals(import.meta.url)
 
 export async function StartExpressServer()
 {
@@ -14,10 +16,6 @@ export async function StartExpressServer()
   // Get port, or default to 9000
   const PORT = process.env.PORT || 9000;
   app.use(cors());
-  // // Pick up React index.html file
-  // app.use(
-  //   express.static(path.join(import.meta.url, "../client/build"))
-  // );
 
   app.get('/data', async function (req, response)
   {
@@ -106,6 +104,23 @@ export async function StartExpressServer()
 
     reply.send(accessToken).status(200);
   });
+
+  if (process.env.NODE_ENV?.trim() === 'production') {
+    // Serve any static files
+    app.use(express.static(path.join(__dirname, 'client/build')));
+    
+    // Handle React routing, return all requests to React app
+    app.get('*', function(req, res) {
+      res.sendFile(path.join(__dirname, 'client/build', 'index.html'));
+    });
+  }
+
+  console.log(process.env.NODE_ENV);
+  if (process.env.NODE_ENV?.trim() === "production") {
+    console.log('production');
+  } else {
+    console.log('development');
+  }
 
   app.listen(PORT, () =>
   {
