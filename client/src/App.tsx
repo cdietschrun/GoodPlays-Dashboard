@@ -9,13 +9,23 @@ import { GameSession } from "./models/GameSession";
 import GamePieChartPage from "./components/GamePieChartPage";
 import GameTreeMapChartPage from "./components/GameTreeMapChartPage";
 import SettingsPage from "./components/SettingsPage";
+import RegistrationPage from "./components/RegistrationPage";
+import LoginForm from "./components/LoginForm";
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
 
+  // useEffect(() => {
+  //   (async function () {
+  //     const { text } = await (await fetch(`/api/message`)).json();
+  //     setData(text);
+  //   })();
+  // });
+
   useEffect(() => {
     const userId = "131989430171992064";
-    const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;
+    //const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;
+    const apiUrl = `http://localhost:9000/data?userId=${userId}`;
     const fetchGameSessions = async () => {
       try {
         const response = await fetch(apiUrl);
@@ -47,6 +57,8 @@ function App() {
             <Route path="/charts/treemap" element={<GameTreeMapChartPage />} />
 
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/login" element={<LoginForm />} />
           </Routes>
         </div>
       </Router>
