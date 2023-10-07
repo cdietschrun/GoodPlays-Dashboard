@@ -9,6 +9,7 @@ on:
       - main
     paths-ignore:
       - 'client/**'
+      - '.github/workflows/main_goodplays.yml'
   workflow_dispatch:
 
 jobs:
