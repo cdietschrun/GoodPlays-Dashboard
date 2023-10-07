@@ -14,10 +14,10 @@ export async function StartExpressServer()
   // Get port, or default to 9000
   const PORT = process.env.PORT || 9000;
   app.use(cors());
-  // Pick up React index.html file
-  app.use(
-    express.static(path.join(import.meta.url, "../client/build"))
-  );
+  // // Pick up React index.html file
+  // app.use(
+  //   express.static(path.join(import.meta.url, "../client/build"))
+  // );
 
   app.get('/data', async function (req, response)
   {
