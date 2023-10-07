@@ -37,4 +37,4 @@ jobs:
           app-name: 'goodplays'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0BDB5D1F73104D8BA80CA03CF8C5828D }}
-          package: .\client\build
+          package: build
