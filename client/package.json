@@ -7,6 +7,7 @@
     "chart.js": "^4.4.0",
     "d3": "^7.8.5",
     "date-fns": "^2.30.0",
+    "del-cli": "^5.1.0",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.2.0",
@@ -18,7 +19,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build --verbose",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "delete": "del-cli --force node_modules"
   },
   "eslintConfig": {
     "extends": [
@@ -51,6 +53,8 @@
     "typescript": "^4.9.5"
   },
   "jest": {
-    "transformIgnorePatterns": ["/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"]
+    "transformIgnorePatterns": [
+      "/node_modules/(?!d3|d3-array|internmap|delaunator|robust-predicates)"
+    ]
   }
 }
