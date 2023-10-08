@@ -1,13 +1,15 @@
 import 'dotenv/config';
 import express from 'express';
-import db from './connections/mongo.js';
+import playsCollection from './routes/connections/mongo.js';
 import cors from 'cors';
 //import mailDaily from './mail.js';a
 //import { startOrEndGame } from './events/presenceUpdate.js';
 import axios from 'axios';
 import path from 'path';
 import { getGlobals } from 'common-es'
-const { __dirname, __filename } = getGlobals(import.meta.url)
+import { GameSession } from './models/GameSession.js';
+import { FindOptions } from 'mongodb';
+const { __dirname } = getGlobals(import.meta.url)
 
 export async function StartExpressServer()
 {
@@ -20,15 +22,14 @@ export async function StartExpressServer()
   app.get('/data', async function (req, response)
   {
     const userId = req.query.userId;
-    let collection = await db.collection("game_play");
     const query = { userId: userId };
-    const options =
+    const options: FindOptions<GameSession> =
     {
       sort: { endTimestamp: -1 },
       projection: { gameName: 1, startTimestamp: 1, endTimestamp: 1, _id: 0 }
     };
 
-    let results = await collection.find(query, options).toArray();
+    let results = await playsCollection.find<GameSession>(query, options).toArray();
 
     response.send(results).status(200);
   });
@@ -36,8 +37,8 @@ export async function StartExpressServer()
   app.get('/email', async function (req, response)
   {
     const userId = req.query.userId;
-    let collection = await db.collection('game_play');
-    const results = collection.aggregate([
+    // let collection = await db.collection('game_play');a
+    const results = playsCollection.aggregate([
       {
         $match: {
           $expr: {
@@ -58,7 +59,7 @@ export async function StartExpressServer()
 
     if (html != '')
     {
-      mailDaily('test', html);
+      // mailDaily('test', html);
     }
 
     response.sendStatus(200);
@@ -86,12 +87,12 @@ export async function StartExpressServer()
     const response = await axios.post(
       'https://discord.com/api/oauth2/token',
       new URLSearchParams({
-        client_id: process.env.APP_ID,
-        client_secret: process.env.DISCORD_TOKEN,
-        code,
+        client_id: process.env.APP_ID || '',
+        client_secret: process.env.DISCORD_TOKEN || '',
+        code: code?.toString() || '',
         redirect_uri: redirectUri,
         grant_type: 'authorization_code',
-      }),
+      }).toString(),
       {
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
@@ -105,6 +106,7 @@ export async function StartExpressServer()
     reply.send(accessToken).status(200);
   });
 
+  
   if (process.env.NODE_ENV?.trim() === 'production') {
     // Serve any static files
     app.use(express.static(path.join(__dirname, 'client/build')));
