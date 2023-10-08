@@ -14,7 +14,8 @@
     "dev": "concurrently \"npm run server\" \"npm run client\"",
     "build": "cd client && npm install && npm run build --verbose && npm run delete",
     "test": "npm run test --prefix client",
-    "prod": "set NODE_ENV=production && npm run start"
+    "prod": "set NODE_ENV=production && npm run start",
+    "delete": "del-cli --force client/node_modules"
   },
   "author": "Chris Dietsch",
   "license": "MIT",

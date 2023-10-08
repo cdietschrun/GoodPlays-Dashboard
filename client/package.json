@@ -19,8 +19,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build --verbose",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "delete": "del-cli --force node_modules"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
