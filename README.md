@@ -1,3 +1,3 @@
 GoodPlays
 
-[![Build and deploy Node.js app to Azure Web App - goodplays](https://github.com/cdietschrun/GoodPlays/actions/workflows/main_goodplays.yml/badge.svg)](https://github.com/cdietschrun/GoodPlays/actions/workflows/main_goodplays.yml)
+[![Goodplays Dashboard CI/CD](https://github.com/cdietschrun/GoodPlays-Dashboard/actions/workflows/main_goodplays.yml/badge.svg?branch=main)](https://github.com/cdietschrun/GoodPlays-Dashboard/actions/workflows/main_goodplays.yml)
