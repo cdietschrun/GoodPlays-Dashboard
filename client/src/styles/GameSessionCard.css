@@ -32,3 +32,7 @@
     font-size: 18px; /* Customize the font size */
     /* Add other styling as needed */
   }
+
+  .delete-gamesession-button {
+    float: right;
+  }

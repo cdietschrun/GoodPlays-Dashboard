@@ -8,7 +8,7 @@ import axios from 'axios';
 import path from 'path';
 import { getGlobals } from 'common-es'
 import { GameSession } from './models/GameSession.js';
-import { FindOptions } from 'mongodb';
+import { FindOptions, ObjectId } from 'mongodb';
 const { __dirname } = getGlobals(import.meta.url);
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
@@ -43,12 +43,24 @@ export async function StartExpressServer()
     const options: FindOptions<GameSession> =
     {
       sort: { endTimestamp: -1 },
-      projection: { gameName: 1, startTimestamp: 1, endTimestamp: 1, _id: 0 }
+      projection: { gameName: 1, startTimestamp: 1, endTimestamp: 1, _id: 1 }
     };
 
     let results = await playsCollection.find<GameSession>(query, options).toArray();
 
     response.send(results).status(200);
+  });
+
+  app.delete('/game_sessions/:id', async function (req, response)
+  {
+    const id = req.params.id;
+
+    const query = { _id: new ObjectId(id) };
+    const result = await playsCollection.deleteOne(query);
+
+    console.log(result);
+
+    response.send(result).status(200);
   });
 
   app.get('/email', async function (req, response)

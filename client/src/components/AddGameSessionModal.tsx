@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface AddGameSessionModalProps {
   onCloseModal: () => void;
@@ -56,7 +58,9 @@ const AddGameSessionModal: React.FC<AddGameSessionModalProps> = ({
         </div>
       ) : (
         <div>
-          <button onClick={() => setShowModal(true)}>Add Game Session</button>
+          <button onClick={() => setShowModal(true)}>
+            <FontAwesomeIcon icon={faPlus} /> Add Game Session
+          </button>{" "}
           <br />
         </div>
       )}

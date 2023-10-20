@@ -3,6 +3,9 @@ import "../styles/GameSessionCard.css";
 import React from "react";
 import { GameSession } from "../models/GameSession";
 import { format, differenceInMinutes } from "date-fns";
+import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 interface GameSessionCardProps {
   session: GameSession;
@@ -40,9 +43,28 @@ const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
       ? "< 1 minute"
       : formatSessionDuration(sessionDurationMinutes);
 
+  const handleDeleteSession = async () => {
+    const response = await fetch(`/game_sessions/${session._id}`, {
+      method: "DELETE",
+    });
+    if (!response.ok) {
+      console.error(
+        "Failed to delete game session:",
+        response.status,
+        response.statusText
+      );
+    }
+  };
+
   return (
     <div className="game-session-card">
       <h2>Game Session: {session.gameName}</h2>
+      <button
+        className="delete-gamesession-button"
+        onClick={handleDeleteSession}
+      >
+        <FontAwesomeIcon icon={faTrashAlt} />
+      </button>
       <p className="session-duration">
         Session Duration:{" "}
         <span className="duration-text">{formattedSessionDuration}</span>
