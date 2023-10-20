@@ -3,7 +3,7 @@ import express from 'express';
 import playsCollection from './connections/mongo.js';
 import cors from 'cors';
 //import mailDaily from './mail.js';a
-//import { startOrEndGame } from './events/presenceUpdate.js';
+import { startOrEndGame } from './game_api.js';
 import axios from 'axios';
 import path from 'path';
 import { getGlobals } from 'common-es'
@@ -87,8 +87,7 @@ export async function StartExpressServer()
     const { userId, gameName, isGameStart } = request.query;
 
     console.log(gameName);
-    let activity = { name: gameName };
-    //startOrEndGame(userId, activity, isGameStart == "true" ? true : false);
+    startOrEndGame(userId as string, gameName as string, isGameStart == "true" ? true : false);
 
     reply.sendStatus(200);
   });

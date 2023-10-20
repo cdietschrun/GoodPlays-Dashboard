@@ -3,6 +3,7 @@ import "../styles/GameSessionList.css";
 import React, { useContext } from "react";
 import GameSessionCard from "./GameSessionCard";
 import { GameSessionsContext } from "../models/GameSessionContext";
+import AddGameSessionModal from "./AddGameSessionModal";
 
 const GameSessionList: React.FC = () => {
   const { gameSessions } = useContext(GameSessionsContext);
@@ -41,6 +42,10 @@ const GameSessionList: React.FC = () => {
     }
   };
 
+  const handleCloseAddGameSessionModal = () => {
+    setCurrentPage(1);
+  };
+
   const handleGoToPage = () => {
     if (inputPage >= 1 && inputPage <= totalPages) {
       setCurrentPage(inputPage);
@@ -52,6 +57,8 @@ const GameSessionList: React.FC = () => {
   return (
     <div className="game-session-list">
       <div className="game-session-card-container">
+        <AddGameSessionModal onCloseModal={handleCloseAddGameSessionModal} />
+
         {currentGameSessions.map((session, index) => (
           <GameSessionCard key={index} session={session} />
         ))}
