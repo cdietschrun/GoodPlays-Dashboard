@@ -11,38 +11,18 @@ import GameTreeMapChartPage from "./components/GameTreeMapChartPage";
 import SettingsPage from "./components/SettingsPage";
 import RegistrationPage from "./components/RegistrationPage";
 import LoginForm from "./components/LoginForm";
+import { fetchGameSessions } from "./AppUtils";
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
 
-  // useEffect(() => {
-  //   (async function () {
-  //     const { text } = await (await fetch(`/api/message`)).json();
-  //     setData(text);
-  //   })();
-  // });
-
   useEffect(() => {
-    const userId = "131989430171992064";
-    //const apiUrl = `https://goodplays.azurewebsites.net/data?userId=${userId}`;a
-    const apiUrl = `/data?userId=${userId}`;
-    const fetchGameSessions = async () => {
-      try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) {
-          throw new Error("Failed to fetch data from the API");
-        }
-
-        const data = await response.json();
-        setGameSessions(data); // Update the state with the fetched game sessions
-      } catch (error) {
-        console.error("Error fetching game sessions:", error);
-      }
+    const fetchData = async () => {
+      setGameSessions(await fetchGameSessions());
     };
 
-    // Call the function to fetch game sessions when the component mounts
-    fetchGameSessions();
-  }, []); // The empty dependency array ensures that this effect runs only once on component mount
+    fetchData();
+  }, []);
 
   return (
     <GameSessionsContext.Provider value={{ gameSessions, setGameSessions }}>

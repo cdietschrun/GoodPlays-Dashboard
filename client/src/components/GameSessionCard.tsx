@@ -1,11 +1,13 @@
 import "../styles/GameSessionCard.css";
 
-import React from "react";
+import React, { useContext } from "react";
 import { GameSession } from "../models/GameSession";
 import { format, differenceInMinutes } from "date-fns";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import { fetchGameSessions } from "../AppUtils";
+import { GameSessionsContext } from "../models/GameSessionContext";
 
 interface GameSessionCardProps {
   session: GameSession;
@@ -25,6 +27,8 @@ const formatSessionDuration = (minutes: number) => {
 };
 
 const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
+  const { setGameSessions } = useContext(GameSessionsContext);
+
   // Parse the dateTime strings into JavaScript Date objects
   const startTime = new Date(session.startTimestamp);
   const endTime = new Date(session.endTimestamp);
@@ -44,10 +48,18 @@ const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
       : formatSessionDuration(sessionDurationMinutes);
 
   const handleDeleteSession = async () => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this game session?"
+    );
+    if (!confirmDelete) {
+      return;
+    }
     const response = await fetch(`/game_sessions/${session._id}`, {
       method: "DELETE",
     });
-    if (!response.ok) {
+    if (response.ok) {
+      setGameSessions(await fetchGameSessions());
+    } else {
       console.error(
         "Failed to delete game session:",
         response.status,

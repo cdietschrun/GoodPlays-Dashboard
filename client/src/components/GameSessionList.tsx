@@ -1,12 +1,15 @@
 import "../styles/GameSessionList.css";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import GameSessionCard from "./GameSessionCard";
 import { GameSessionsContext } from "../models/GameSessionContext";
 import AddGameSessionModal from "./AddGameSessionModal";
+import { fetchGameSessions } from "../AppUtils";
+import { faSync } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const GameSessionList: React.FC = () => {
-  const { gameSessions } = useContext(GameSessionsContext);
+  const { gameSessions, setGameSessions } = useContext(GameSessionsContext);
 
   const gamesPerPage = 5;
   const totalPages = Math.ceil(gameSessions.length / gamesPerPage);
@@ -17,8 +20,9 @@ const GameSessionList: React.FC = () => {
     return gameSessions.slice(startIndex, endIndex);
   };
 
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const [inputPage, setInputPage] = React.useState(currentPage);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [inputPage, setInputPage] = useState(currentPage);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handlePreviousPage = () => {
     if (currentPage > 1) {
@@ -42,8 +46,9 @@ const GameSessionList: React.FC = () => {
     }
   };
 
-  const handleCloseAddGameSessionModal = () => {
+  const handleCloseAddGameSessionModal = async () => {
     setCurrentPage(1);
+    setGameSessions(await fetchGameSessions());
   };
 
   const handleGoToPage = () => {
@@ -52,12 +57,28 @@ const GameSessionList: React.FC = () => {
     }
   };
 
+  const handleRefresh = async () => {
+    setIsLoading(true);
+    setGameSessions(await fetchGameSessions());
+    setIsLoading(false);
+  };
+
   const currentGameSessions = paginate(currentPage);
 
   return (
     <div className="game-session-list">
       <div className="game-session-card-container">
         <AddGameSessionModal onCloseModal={handleCloseAddGameSessionModal} />
+        <button onClick={handleRefresh} disabled={isLoading}>
+          {isLoading ? (
+            <FontAwesomeIcon icon={faSync} spin />
+          ) : (
+            <span>
+              <FontAwesomeIcon icon={faSync} /> Refresh Game Sessions
+            </span>
+          )}
+        </button>
+        <br />
 
         {currentGameSessions.map((session, index) => (
           <GameSessionCard key={index} session={session} />

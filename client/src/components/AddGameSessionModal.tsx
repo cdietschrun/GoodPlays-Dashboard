@@ -61,7 +61,6 @@ const AddGameSessionModal: React.FC<AddGameSessionModalProps> = ({
           <button onClick={() => setShowModal(true)}>
             <FontAwesomeIcon icon={faPlus} /> Add Game Session
           </button>{" "}
-          <br />
         </div>
       )}
     </>
