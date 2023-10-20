@@ -5,7 +5,6 @@ import { GameSession } from "../models/GameSession";
 import { format, differenceInMinutes } from "date-fns";
 import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import "@fortawesome/fontawesome-free/css/all.min.css";
 import { fetchGameSessions } from "../AppUtils";
 import { GameSessionsContext } from "../models/GameSessionContext";
 

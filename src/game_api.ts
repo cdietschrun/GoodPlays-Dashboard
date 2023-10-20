@@ -4,6 +4,9 @@ import playsCollection from './connections/mongo.js';
 type ActiveGames = {[key: string]: ObjectId};
 let activeGames: ActiveGames = {};
 
+// TODO endgame/activegames here should be replaced, with a button to press "ended game session"
+// that updates the gamesession._id's entry in the DB (just like with delete) with a new endTimestamp.
+
 export async function startOrEndGame(userId: string, gameName: string, isStart: boolean) {
   try {
     console.log(gameName);
