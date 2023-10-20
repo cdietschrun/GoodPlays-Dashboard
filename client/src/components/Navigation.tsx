@@ -17,6 +17,9 @@ const Navigation: React.FC = () => {
           <Link to="/charts">Charts</Link>
         </li>
         <li className="navbar-item navbar-item-right">
+          <Link to="/login">Login</Link>
+        </li>
+        <li className="navbar-item navbar-item-right">
           <Link to="/settings">Settings</Link>
         </li>
       </ul>

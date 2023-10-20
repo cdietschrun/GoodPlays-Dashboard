@@ -1,6 +1,6 @@
 import 'dotenv/config';
 import express from 'express';
-import playsCollection from './routes/connections/mongo.js';
+import playsCollection from './connections/mongo.js';
 import cors from 'cors';
 //import mailDaily from './mail.js';a
 //import { startOrEndGame } from './events/presenceUpdate.js';
@@ -9,15 +9,32 @@ import path from 'path';
 import { getGlobals } from 'common-es'
 import { GameSession } from './models/GameSession.js';
 import { FindOptions } from 'mongodb';
-const { __dirname } = getGlobals(import.meta.url)
+const { __dirname } = getGlobals(import.meta.url);
+import passport from 'passport';
+import { Strategy as LocalStrategy } from 'passport-local';
 
 export async function StartExpressServer()
 {
   // Create an express app
   const app = express();
+
   // Get port, or default to 9000
   const PORT = process.env.PORT || 9000;
+
   app.use(cors());
+
+  passport.use(new LocalStrategy(function verify(username: any, password: any, cb: any) {
+    // This one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
+    if (username === 'a' && password === 'c') {
+      return cb(null, { id: 1, username: 'a' });
+    }
+    return cb(null, false, { message: 'Incorrect email or password.' });
+  }));
+
+  app.post('/login/password', passport.authenticate('local', {
+      successRedirect: '/',
+      failureRedirect: '/login'
+  }));
 
   app.get('/data', async function (req, response)
   {
