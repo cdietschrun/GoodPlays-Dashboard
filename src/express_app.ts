@@ -12,7 +12,7 @@ import { FindOptions, ObjectId } from 'mongodb';
 const { __dirname } = getGlobals(import.meta.url);
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { start } from 'repl';
+import session from 'express-session';
 
 export async function StartExpressServer()
 {
@@ -25,7 +25,32 @@ export async function StartExpressServer()
   app.use(cors());
   app.use(express.json());
 
+  app.use(passport.initialize());
+  // app.use(passport.session());
+  app.use(express.static(path.join(__dirname, 'public')));
+  app.use(session({
+    secret: 'keyboard catchris123',
+    resave: false,
+    saveUninitialized: false
+  }));
+  app.use(passport.authenticate('session'));
+
+  passport.serializeUser(function(user: any, cb) {
+    console.log('serialize user called');
+    process.nextTick(function() {
+      cb(null, { id: user.id, username: user.username });
+    });
+  });
+  
+  passport.deserializeUser(function(user: any, cb) {
+    process.nextTick(function() {
+      return cb(null, user);
+    });
+  });
+
   passport.use(new LocalStrategy(function verify(username: any, password: any, cb: any) {
+    console.log(`verify called: ${username} ${password}`);
+
     // This one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
     if (username === 'a' && password === 'c') {
       return cb(null, { id: 1, username: 'a' });
@@ -33,10 +58,27 @@ export async function StartExpressServer()
     return cb(null, false, { message: 'Incorrect email or password.' });
   }));
 
-  app.post('/login/password', passport.authenticate('local', {
-      successRedirect: '/',
-      failureRedirect: '/login'
-  }));
+  // app.post('/login/password', passport.authenticate('local', {
+  //   successRedirect: '/',
+  //   failureRedirect: '/login'
+  // }));
+
+  app.post('/login/password', async (req, reply, next) => {
+    passport.authenticate('local', function(err: any , user: any, info: any) {
+      if (err) { return next(err) }
+      if (!user) { return reply.json({"redirectUri": "/login"}) }
+      reply.json({"redirectUri": "/"})
+
+    })(req, reply, next);
+  });
+
+  // app.get('/protected', function(req, res, next) {
+  //   passport.authenticate('local', function(err, user, info, status) {
+  //     if (err) { return next(err) }
+  //     if (!user) { return res.redirect('/signin') }
+  //     res.redirect('/account');
+  //   })(req, res, next);
+  // });
 
   app.get('/data', async function (req, response)
   {
