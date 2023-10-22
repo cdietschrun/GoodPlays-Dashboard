@@ -2,14 +2,14 @@ import "../styles/GameSessionList.css";
 
 import React, { useContext, useState } from "react";
 import GameSessionCard from "./GameSessionCard";
-import { GameSessionsContext } from "../models/GameSessionContext";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 import AddGameSessionModal from "./AddGameSessionModal";
 import { fetchGameSessions } from "../AppUtils";
 import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const GameSessionList: React.FC = () => {
-  const { gameSessions, setGameSessions } = useContext(GameSessionsContext);
+  const { gameSessions, setGameSessions } = useContext(GoodplaysContext);
 
   const gamesPerPage = 5;
   const totalPages = Math.ceil(gameSessions.length / gamesPerPage);

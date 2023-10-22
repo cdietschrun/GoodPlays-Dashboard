@@ -7,7 +7,7 @@ import {
 import HomePage from "./components/HomePage";
 import Navigation from "./components/Navigation";
 import { useEffect, useState } from "react";
-import { GameSessionsContext } from "./models/GameSessionContext";
+import { GoodplaysContext } from "./models/GoodplaysContextType";
 import ChartNavigation from "./components/ChartsNavigation";
 import { GameSession } from "./models/GameSession";
 import GamePieChartPage from "./components/GamePieChartPage";
@@ -16,6 +16,7 @@ import SettingsPage from "./components/SettingsPage";
 import RegistrationPage from "./components/RegistrationPage";
 import LoginForm from "./components/LoginForm";
 import { fetchGameSessions } from "./AppUtils";
+import LogoutForm from './components/LogoutForm';
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
@@ -30,37 +31,28 @@ function App() {
   }, []);
 
   return (
-    <GameSessionsContext.Provider value={{ gameSessions, setGameSessions }}>
+    <GoodplaysContext.Provider value={{ gameSessions, setGameSessions, isLoggedIn, setIsLoggedIn }}>
       <Router>
         <div className="app">
           <Navigation />
 
           <Routes>
-            <Route
-              path="/"
-              element={
-                isLoggedIn ? (
-                  <HomePage />
-                ) : (
-                  <Navigate to="/login" replace={true} />
-                )
-              }
-            />
+            <Route path="/" element={ isLoggedIn ? (<HomePage />) : (<Navigate to="/login" replace={true} />) }/> 
 
-            <Route path="/charts" element={<ChartNavigation />} />
-            <Route path="/charts/pie" element={<GamePieChartPage />} />
-            <Route path="/charts/treemap" element={<GameTreeMapChartPage />} />
+            <Route path="/charts" element={isLoggedIn ? (<ChartNavigation />) : (<Navigate to="/login" replace={true} />)} />
+            <Route path="/charts/pie" element={isLoggedIn ? (<GamePieChartPage />) : (<Navigate to="/login" replace={true} />)} />
+            <Route path="/charts/treemap" element={ isLoggedIn? (<GameTreeMapChartPage />) : (<Navigate to="/login" replace={true} />)} />
 
-            <Route path="/settings" element={<SettingsPage />} />
+            <Route path="/settings" element={isLoggedIn ? (<SettingsPage />) : (<Navigate to="/login" replace={true} />)} />
             <Route path="/register" element={<RegistrationPage />} />
-            <Route
-              path="/login"
-              element={<LoginForm setIsLoggedIn={setIsLoggedIn} />}
+            <Route path="/login" element={<LoginForm /> } />
+            <Route path="/logout" element={isLoggedIn && <LogoutForm /> } 
+              
             />
           </Routes>
         </div>
       </Router>
-    </GameSessionsContext.Provider>
+    </GoodplaysContext.Provider>
   );
 }
 

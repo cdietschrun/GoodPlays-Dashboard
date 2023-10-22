@@ -1,14 +1,12 @@
-import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 
-interface LoginFormProps {
-  setIsLoggedIn: (isLoggedIn: boolean) => void;
-}
-
-const LoginPage: React.FC<LoginFormProps> = ({ setIsLoggedIn }) => {
+const LoginPage: React.FC = () => {
+  const { setIsLoggedIn } = useContext(GoodplaysContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [loggedIn, setUserLoggedIn] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -23,17 +21,12 @@ const LoginPage: React.FC<LoginFormProps> = ({ setIsLoggedIn }) => {
       });
 
       const data = await response.json();
-      console.log(`logging in, user: ${data.user}`);
-      if (data.redirectUri === "/") {
+      console.log("logging in, data: ", data);
+      if (data.user) {
         console.log("logged in");
         setIsLoggedIn(true);
-        setUserLoggedIn(true);
+        navigate("/");
       }
-
-      // redirect(data.redirectUri);
-      //window.history.pushState({}, "", data.redirectUri);
-
-      console.log(data);
     } catch (error) {
       console.error(error);
     }
@@ -48,36 +41,32 @@ const LoginPage: React.FC<LoginFormProps> = ({ setIsLoggedIn }) => {
   };
 
   return (
-    <div>
-      {loggedIn && <Navigate to="/" replace={true} />}
-
-      <form onSubmit={handleSubmit}>
-        <section>
-          <label htmlFor="username">Username</label>
-          <input
-            id="username"
-            name="username"
-            type="text"
-            autoComplete="username"
-            required
-            autoFocus
-            onChange={handleUsernameChange}
-          />
-        </section>
-        <section>
-          <label htmlFor="password">Password</label>
-          <input
-            id="password"
-            name="password"
-            type="password"
-            autoComplete="password"
-            required
-            onChange={handlePasswordChange}
-          />
-        </section>
-        <button type="submit">Sign in</button>
-      </form>
-    </div>
+    <form onSubmit={handleSubmit}>
+      <section>
+        <label htmlFor="username">Username</label>
+        <input
+          id="username"
+          name="username"
+          type="text"
+          autoComplete="username"
+          required
+          autoFocus
+          onChange={handleUsernameChange}
+        />
+      </section>
+      <section>
+        <label htmlFor="password">Password</label>
+        <input
+          id="password"
+          name="password"
+          type="password"
+          autoComplete="password"
+          required
+          onChange={handlePasswordChange}
+        />
+      </section>
+      <button type="submit">Sign in</button>
+    </form>
   );
 };
 

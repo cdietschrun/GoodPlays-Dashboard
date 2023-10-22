@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef } from "react";
 import * as d3 from "d3";
-import { GameSessionsContext } from "../models/GameSessionContext";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 import { GameSession } from "../models/GameSession";
 
 type Data = {
@@ -26,7 +26,7 @@ function transformData(gameSessions: GameSession[]): Data[] {
 }
 
 const GameTreeMapChart: React.FC = () => {
-  const { gameSessions } = useContext(GameSessionsContext);
+  const { gameSessions } = useContext(GoodplaysContext);
   const ref = useRef<SVGSVGElement>(null);
 
   useEffect(() => {

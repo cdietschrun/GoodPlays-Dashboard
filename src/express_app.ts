@@ -26,7 +26,6 @@ export async function StartExpressServer()
   app.use(express.json());
 
   app.use(passport.initialize());
-  // app.use(passport.session());
   app.use(express.static(path.join(__dirname, 'public')));
   app.use(session({
     secret: 'keyboard catchris123',
@@ -58,27 +57,14 @@ export async function StartExpressServer()
     return cb(null, false, { message: 'Incorrect email or password.' });
   }));
 
-  // app.post('/login/password', passport.authenticate('local', {
-  //   successRedirect: '/',
-  //   failureRedirect: '/login'
-  // }));
-
   app.post('/login/password', async (req, reply, next) => {
     passport.authenticate('local', function(err: any , user: any, info: any) {
       if (err) { return next(err) }
       if (!user) { return reply.json({"redirectUri": "/login"}) }
-      reply.json({"redirectUri": "/", "user": user})
+      reply.json({"user": user})
 
     })(req, reply, next);
   });
-
-  // app.get('/protected', function(req, res, next) {
-  //   passport.authenticate('local', function(err, user, info, status) {
-  //     if (err) { return next(err) }
-  //     if (!user) { return res.redirect('/signin') }
-  //     res.redirect('/account');
-  //   })(req, res, next);
-  // });
 
   app.get('/data', async function (req, response)
   {

@@ -8,7 +8,7 @@ import {
 } from "chart.js";
 import { Pie } from "react-chartjs-2";
 import { GameSession } from "../models/GameSession";
-import { GameSessionsContext } from "../models/GameSessionContext";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -40,7 +40,7 @@ export const data2 = {
 };
 
 const GamePieChart: React.FC = () => {
-  const { gameSessions } = useContext(GameSessionsContext);
+  const { gameSessions } = useContext(GoodplaysContext);
 
   function dataToChartData(
     gameSessions: GameSession[]

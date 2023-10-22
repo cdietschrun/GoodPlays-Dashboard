@@ -6,7 +6,7 @@ import { format, differenceInMinutes } from "date-fns";
 import { faTrashAlt, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchGameSessions } from "../AppUtils";
-import { GameSessionsContext } from "../models/GameSessionContext";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 import EditGameSessionModal from "./EditGameSessionModal";
 
 interface GameSessionCardProps {
@@ -27,7 +27,7 @@ const formatSessionDuration = (minutes: number) => {
 };
 
 const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
-  const { setGameSessions } = useContext(GameSessionsContext);
+  const { setGameSessions } = useContext(GoodplaysContext);
   const [showEditModal, setShowEditModal] = useState(false);
 
   // Parse the dateTime strings into JavaScript Date objects

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { GameSession } from "../models/GameSession";
-import { GameSessionsContext } from "../models/GameSessionContext";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 import { fetchGameSessions } from "../AppUtils";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSave, faTimes } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +14,7 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
   session,
   onClose,
 }) => {
-  const { setGameSessions } = useContext(GameSessionsContext);
+  const { setGameSessions } = useContext(GoodplaysContext);
   const [gameName, setGameName] = useState(session.gameName);
   const startDate = new Date(session.startTimestamp);
   const endDate = new Date(session.endTimestamp);

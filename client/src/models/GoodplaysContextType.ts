@@ -1,12 +1,16 @@
 import { createContext } from "react";
 import { GameSession } from './GameSession';
 
-type GameSessionsContextType = {
+type GoodplaysContextType = {
   gameSessions: GameSession[];
   setGameSessions: React.Dispatch<React.SetStateAction<GameSession[]>>;
+  isLoggedIn: boolean;
+  setIsLoggedIn: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export const GameSessionsContext = createContext<GameSessionsContextType>({
+export const GoodplaysContext = createContext<GoodplaysContextType>({
   gameSessions: [],
   setGameSessions: () => {},
+  isLoggedIn: false,
+  setIsLoggedIn: () => {}
 });

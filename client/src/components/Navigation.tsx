@@ -1,9 +1,12 @@
 import "../styles/Navigation.css";
 
-import React from "react";
+import React, { useContext } from "react";
 import { Link } from "react-router-dom";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 
 const Navigation: React.FC = () => {
+  const { isLoggedIn } = useContext(GoodplaysContext);
+
   return (
     <nav className="navbar">
       <ul className="navbar-menu">
@@ -16,9 +19,15 @@ const Navigation: React.FC = () => {
         <li className="navbar-item">
           <Link to="/charts">Charts</Link>
         </li>
-        <li className="navbar-item navbar-item-right">
-          <Link to="/login">Login</Link>
-        </li>
+        {isLoggedIn ? (
+          <li className="navbar-item">
+            <Link to="/logout">Logout</Link>
+          </li>
+        ) : (
+          <li className="navbar-item">
+            <Link to="/login">Login</Link>
+          </li>
+        )}
         <li className="navbar-item navbar-item-right">
           <Link to="/settings">Settings</Link>
         </li>
