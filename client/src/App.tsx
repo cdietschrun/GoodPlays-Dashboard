@@ -1,6 +1,10 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import HomePage from "./components/HomePage";
-import Callback from "./components/Callback";
 import Navigation from "./components/Navigation";
 import { useEffect, useState } from "react";
 import { GameSessionsContext } from "./models/GameSessionContext";
@@ -15,6 +19,7 @@ import { fetchGameSessions } from "./AppUtils";
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -31,21 +36,32 @@ function App() {
           <Navigation />
 
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/"
+              element={
+                isLoggedIn ? (
+                  <HomePage />
+                ) : (
+                  <Navigate to="/login" replace={true} />
+                )
+              }
+            />
+
             <Route path="/charts" element={<ChartNavigation />} />
             <Route path="/charts/pie" element={<GamePieChartPage />} />
             <Route path="/charts/treemap" element={<GameTreeMapChartPage />} />
 
             <Route path="/settings" element={<SettingsPage />} />
             <Route path="/register" element={<RegistrationPage />} />
-            <Route path="/login" element={<LoginForm />} />
+            <Route
+              path="/login"
+              element={<LoginForm setIsLoggedIn={setIsLoggedIn} />}
+            />
           </Routes>
         </div>
       </Router>
     </GameSessionsContext.Provider>
   );
 }
-
-<Route path="/callback" element={<Callback />} />;
 
 export default App;

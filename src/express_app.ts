@@ -67,7 +67,7 @@ export async function StartExpressServer()
     passport.authenticate('local', function(err: any , user: any, info: any) {
       if (err) { return next(err) }
       if (!user) { return reply.json({"redirectUri": "/login"}) }
-      reply.json({"redirectUri": "/"})
+      reply.json({"redirectUri": "/", "user": user})
 
     })(req, reply, next);
   });
