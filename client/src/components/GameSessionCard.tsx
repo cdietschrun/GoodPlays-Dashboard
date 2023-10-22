@@ -1,12 +1,13 @@
 import "../styles/GameSessionCard.css";
 
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { GameSession } from "../models/GameSession";
 import { format, differenceInMinutes } from "date-fns";
-import { faTrashAlt } from "@fortawesome/free-solid-svg-icons";
+import { faTrashAlt, faEdit } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { fetchGameSessions } from "../AppUtils";
 import { GameSessionsContext } from "../models/GameSessionContext";
+import EditGameSessionModal from "./EditGameSessionModal";
 
 interface GameSessionCardProps {
   session: GameSession;
@@ -27,6 +28,7 @@ const formatSessionDuration = (minutes: number) => {
 
 const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
   const { setGameSessions } = useContext(GameSessionsContext);
+  const [showEditModal, setShowEditModal] = useState(false);
 
   // Parse the dateTime strings into JavaScript Date objects
   const startTime = new Date(session.startTimestamp);
@@ -67,9 +69,20 @@ const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
     }
   };
 
+  const handleEditSession = async () => {
+    setShowEditModal(true);
+  };
+
+  const handleEditModalClose = () => {
+    setShowEditModal(false);
+  };
+
   return (
     <div className="game-session-card">
       <h2>Game Session: {session.gameName}</h2>
+      <button className="edit-gamesession-button" onClick={handleEditSession}>
+        <FontAwesomeIcon icon={faEdit} />
+      </button>
       <button
         className="delete-gamesession-button"
         onClick={handleDeleteSession}
@@ -83,6 +96,12 @@ const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
       <p>Start Time: {formattedStartTime}</p>
       <p>End Time: {formattedEndTime}</p>
       <p>All Time Game Time Played: {session.overallGameTime} minutes</p>
+      {showEditModal && (
+        <EditGameSessionModal
+          session={session}
+          onClose={handleEditModalClose}
+        />
+      )}
     </div>
   );
 };

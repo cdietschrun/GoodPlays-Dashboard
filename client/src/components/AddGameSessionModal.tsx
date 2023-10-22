@@ -17,7 +17,6 @@ const AddGameSessionModal: React.FC<AddGameSessionModalProps> = ({
   };
 
   const handleAddGameSession = async () => {
-    // const gameName = prompt("Enter the name of the game:");
     if (gameName) {
       const userId = "131989430171992064";
       const response = await fetch(

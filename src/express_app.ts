@@ -22,6 +22,7 @@ export async function StartExpressServer()
   const PORT = process.env.PORT || 9000;
 
   app.use(cors());
+  app.use(express.json());
 
   passport.use(new LocalStrategy(function verify(username: any, password: any, cb: any) {
     // This one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
@@ -59,6 +60,22 @@ export async function StartExpressServer()
     const result = await playsCollection.deleteOne(query);
 
     console.log(result);
+
+    response.send(result).status(200);
+  });
+
+  app.put('/game_sessions/:id', async function (req, response)
+  {
+    console.log(req.body);
+
+    const id = req.params.id;
+    const { gameName, startTimestamp, endTimestamp } = req.body;
+
+    const query = { _id: new ObjectId(id) };
+    const update = { $set: { gameName: gameName, startTimestamp: new Date(startTimestamp), endTimestamp: new Date(endTimestamp) } };
+    const result = await playsCollection.updateOne(query, update);
+
+    console.log(result); 
 
     response.send(result).status(200);
   });
