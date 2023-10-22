@@ -83,7 +83,7 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
       <h2>Edit Game Session</h2>
       <form onSubmit={handleSubmit}>
         <div>
-          <label htmlFor="gameName">Game Name:</label>
+          <label htmlFor="gameName">Game Name: </label>
           <input
             type="text"
             id="gameName"
@@ -92,7 +92,7 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
           />
         </div>
         <div>
-          <label htmlFor="startTime">Start Time:</label>
+          <label htmlFor="startTime">Start Time: </label>
           <input
             type="datetime-local"
             id="startTime"
@@ -101,7 +101,7 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
           />
         </div>
         <div>
-          <label htmlFor="endTime">End Time:</label>
+          <label htmlFor="endTime">End Time: </label>
           <input
             type="datetime-local"
             id="endTime"

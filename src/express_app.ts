@@ -3,7 +3,7 @@ import express from 'express';
 import playsCollection from './connections/mongo.js';
 import cors from 'cors';
 //import mailDaily from './mail.js';a
-import { startOrEndGame } from './game_api.js';
+import { upsertGameSession } from './game_api.js';
 import axios from 'axios';
 import path from 'path';
 import { getGlobals } from 'common-es'
@@ -12,6 +12,7 @@ import { FindOptions, ObjectId } from 'mongodb';
 const { __dirname } = getGlobals(import.meta.url);
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
+import { start } from 'repl';
 
 export async function StartExpressServer()
 {
@@ -52,6 +53,30 @@ export async function StartExpressServer()
     response.send(results).status(200);
   });
 
+  // Add game session
+  app.post('/game_sessions', async (req, reply) =>
+  {
+    const { gameName, startTimestamp, endTimestamp, userId } = req.body;
+
+    upsertGameSession(undefined, userId as string, gameName as string, new Date(startTimestamp), new Date(endTimestamp));
+
+    reply.sendStatus(200);
+  });
+
+  // Update game session
+  app.put('/game_sessions/:id', async function (req, response)
+  {
+    console.log(req.body);
+
+    const id = req.params.id;
+    const { gameName, startTimestamp, endTimestamp } = req.body;
+
+    upsertGameSession(id, undefined, gameName as string, new Date(startTimestamp), new Date(endTimestamp));
+
+    response.sendStatus(200);
+  });
+
+  // Delete game session
   app.delete('/game_sessions/:id', async function (req, response)
   {
     const id = req.params.id;
@@ -64,26 +89,9 @@ export async function StartExpressServer()
     response.send(result).status(200);
   });
 
-  app.put('/game_sessions/:id', async function (req, response)
-  {
-    console.log(req.body);
-
-    const id = req.params.id;
-    const { gameName, startTimestamp, endTimestamp } = req.body;
-
-    const query = { _id: new ObjectId(id) };
-    const update = { $set: { gameName: gameName, startTimestamp: new Date(startTimestamp), endTimestamp: new Date(endTimestamp) } };
-    const result = await playsCollection.updateOne(query, update);
-
-    console.log(result); 
-
-    response.send(result).status(200);
-  });
-
   app.get('/email', async function (req, response)
   {
     const userId = req.query.userId;
-    // let collection = await db.collection('game_play');a
     const results = playsCollection.aggregate([
       {
         $match: {
@@ -109,16 +117,6 @@ export async function StartExpressServer()
     }
 
     response.sendStatus(200);
-  });
-
-  app.post('/manual_game_log', async (request, reply) =>
-  {
-    const { userId, gameName, isGameStart } = request.query;
-
-    console.log(gameName);
-    startOrEndGame(userId as string, gameName as string, isGameStart == "true" ? true : false);
-
-    reply.sendStatus(200);
   });
 
   app.get('/callback', async (request, reply) =>
