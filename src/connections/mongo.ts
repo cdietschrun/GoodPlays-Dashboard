@@ -6,5 +6,6 @@ const client = new MongoClient(connectionString);
 await client.connect();
 const db: Db = client.db("goodplays_database");
 const playsCollection: Collection = db.collection("game_play");
+export const userAccountsCollection: Collection = db.collection("user_accounts");
 
 export default playsCollection;

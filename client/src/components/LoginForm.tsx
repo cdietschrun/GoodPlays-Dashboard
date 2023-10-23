@@ -3,9 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { GoodplaysContext } from "../models/GoodplaysContextType";
 
 const LoginPage: React.FC = () => {
-  const { setIsLoggedIn } = useContext(GoodplaysContext);
+  const { setIsLoggedIn, setGoodplaysUser } = useContext(GoodplaysContext);
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -22,22 +23,23 @@ const LoginPage: React.FC = () => {
 
       const data = await response.json();
       console.log("logging in, data: ", data);
-      if (data.user) {
+      // set email/username, maybe one GoodPlaysUser object
+      if (data.email) {
         console.log("logged in");
         setIsLoggedIn(true);
+        setGoodplaysUser({
+          _id: data._id,
+          userName: data.username,
+          email: data.email,
+          discordUserId: data.discordUserId,
+        });
         navigate("/");
+      } else {
+        setErrorMessage(data.message);
       }
     } catch (error) {
       console.error(error);
     }
-  };
-
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
-  };
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
   };
 
   return (
@@ -51,7 +53,7 @@ const LoginPage: React.FC = () => {
           autoComplete="username"
           required
           autoFocus
-          onChange={handleUsernameChange}
+          onChange={(event) => setUsername(event.target.value)}
         />
       </section>
       <section>
@@ -62,10 +64,11 @@ const LoginPage: React.FC = () => {
           type="password"
           autoComplete="password"
           required
-          onChange={handlePasswordChange}
+          onChange={(event) => setPassword(event.target.value)}
         />
       </section>
       <button type="submit">Sign in</button>
+      {errorMessage && <p>{errorMessage}</p>}
     </form>
   );
 };

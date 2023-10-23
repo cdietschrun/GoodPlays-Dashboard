@@ -9,7 +9,8 @@ import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const GameSessionList: React.FC = () => {
-  const { gameSessions, setGameSessions } = useContext(GoodplaysContext);
+  const { gameSessions, setGameSessions, goodplaysUser } =
+    useContext(GoodplaysContext);
 
   const gamesPerPage = 5;
   const totalPages = Math.ceil(gameSessions.length / gamesPerPage);
@@ -48,7 +49,7 @@ const GameSessionList: React.FC = () => {
 
   const handleCloseAddGameSessionModal = async () => {
     setCurrentPage(1);
-    setGameSessions(await fetchGameSessions());
+    setGameSessions(await fetchGameSessions(goodplaysUser.discordUserId));
   };
 
   const handleGoToPage = () => {
@@ -59,7 +60,7 @@ const GameSessionList: React.FC = () => {
 
   const handleRefresh = async () => {
     setIsLoading(true);
-    setGameSessions(await fetchGameSessions());
+    setGameSessions(await fetchGameSessions(goodplaysUser.discordUserId));
     setIsLoading(false);
   };
 

@@ -27,7 +27,7 @@ const formatSessionDuration = (minutes: number) => {
 };
 
 const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
-  const { setGameSessions } = useContext(GoodplaysContext);
+  const { setGameSessions, goodplaysUser } = useContext(GoodplaysContext);
   const [showEditModal, setShowEditModal] = useState(false);
 
   // Parse the dateTime strings into JavaScript Date objects
@@ -59,7 +59,7 @@ const GameSessionCard: React.FC<GameSessionCardProps> = ({ session }) => {
       method: "DELETE",
     });
     if (response.ok) {
-      setGameSessions(await fetchGameSessions());
+      setGameSessions(await fetchGameSessions(goodplaysUser.discordUserId));
     } else {
       console.error(
         "Failed to delete game session:",

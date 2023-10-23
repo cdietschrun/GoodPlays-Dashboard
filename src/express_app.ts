@@ -1,18 +1,19 @@
 import 'dotenv/config';
-import express from 'express';
-import playsCollection from './connections/mongo.js';
-import cors from 'cors';
-//import mailDaily from './mail.js';a
-import { upsertGameSession } from './game_api.js';
+
 import axios from 'axios';
-import path from 'path';
 import { getGlobals } from 'common-es'
+import playsCollection, { userAccountsCollection } from './connections/mongo.js';
+import cors from 'cors';
+import crypto from 'crypto';
+const { __dirname } = getGlobals(import.meta.url);
+import express from 'express';
+import session from 'express-session';
+import { upsertGameSession } from './game_api.js';
 import { GameSession } from './models/GameSession.js';
 import { FindOptions, ObjectId } from 'mongodb';
-const { __dirname } = getGlobals(import.meta.url);
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import session from 'express-session';
+import path from 'path';
 
 export async function StartExpressServer()
 {
@@ -34,36 +35,84 @@ export async function StartExpressServer()
   }));
   app.use(passport.authenticate('session'));
 
-  passport.serializeUser(function(user: any, cb) {
-    console.log('serialize user called');
+  passport.serializeUser(function(user: any, done) {
+    console.log("serialize user called", user);
     process.nextTick(function() {
-      cb(null, { id: user.id, username: user.username });
+      done(null, { _id: user._id, username: user.username, email: user.email });
     });
   });
   
-  passport.deserializeUser(function(user: any, cb) {
+  passport.deserializeUser(function(user: any, done) {
     process.nextTick(function() {
-      return cb(null, user);
+      return done(null, user);
     });
   });
 
-  passport.use(new LocalStrategy(function verify(username: any, password: any, cb: any) {
-    console.log(`verify called: ${username} ${password}`);
+  passport.use(new LocalStrategy(function verify(username: any, password: any, done: any) {
 
-    // This one is typically a DB call. Assume that the returned user object is pre-formatted and ready for storing in JWT
-    if (username === 'a' && password === 'c') {
-      return cb(null, { id: 1, username: 'a' });
-    }
-    return cb(null, false, { message: 'Incorrect email or password.' });
+    userAccountsCollection.findOne({ $or: [{ username }, { email: username }] })
+    .then((user: any) => {
+      if (!user) { return done(null, false, { message: 'Incorrect email or password.' }); }
+
+      const hashedPassword = crypto.pbkdf2Sync(password, user.salt, 1000, 64, "sha512").toString("hex");
+
+      if (!crypto.timingSafeEqual(Buffer.from(user.hashedPassword, 'hex'), Buffer.from(hashedPassword, 'hex'))) { 
+        return done(null, false, { message: 'Incorrect email or password.' }); 
+      }
+
+      return done(null, user);
+    })
+    .catch((err: any) => {
+      console.log(err);
+      return done(err);
+    });
   }));
 
-  app.post('/login/password', async (req, reply, next) => {
+  app.post('/signup/password', async (req, res, next) => {
+    const { username, email, password } = req.body;
+
+    const existingUser = await userAccountsCollection.findOne({ $or: [{ username }, { email }] });
+    if (existingUser) {
+      return res.status(409).json({ message: 'Username or email already exists' });
+    }
+
+    const salt = crypto.randomBytes(16).toString("hex");
+    const hashedPassword = crypto.pbkdf2Sync(password, salt, 1000, 64, "sha512").toString("hex");
+
+    const user = {
+      username,
+      email,
+      salt,
+      hashedPassword
+    };
+
+    try {
+      const result = await userAccountsCollection.insertOne(user);
+      res.json(result);
+    }
+    catch( error) {
+      console.log(error);
+    }
+  });
+
+  app.post('/login/password', async (req, res, next) => {
     passport.authenticate('local', function(err: any , user: any, info: any) {
       if (err) { return next(err) }
-      if (!user) { return reply.json({"redirectUri": "/login"}) }
-      reply.json({"user": user})
+      if (!user) { return res.json({ message: info.message }) }
+      res.json({"_id": user._id, "userName": user.username, "email": user.email, "discordUserId": user.discordUserId});
 
-    })(req, reply, next);
+    })(req, res, next);
+  });
+
+  app.put('/user/:id', async (req, res, next) => {
+    const { id } = req.params;
+    const { discordUserId } = req.body;
+
+    const query = { _id: new ObjectId(id) };
+    const update = { $set: { discordUserId: discordUserId } };
+
+    const result = await userAccountsCollection.updateOne(query, update);
+    result.modifiedCount === 1 ? res.status(200).json({ message: "User settings updated!" }) : res.status(404).json({ message: "Error updating user settings!" });
   });
 
   app.get('/data', async function (req, response)

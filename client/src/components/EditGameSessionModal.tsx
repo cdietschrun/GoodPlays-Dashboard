@@ -14,7 +14,7 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
   session,
   onClose,
 }) => {
-  const { setGameSessions } = useContext(GoodplaysContext);
+  const { setGameSessions, goodplaysUser } = useContext(GoodplaysContext);
   const [gameName, setGameName] = useState(session.gameName);
   const startDate = new Date(session.startTimestamp);
   const endDate = new Date(session.endTimestamp);
@@ -56,7 +56,6 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
       endTimestamp,
     };
 
-    // const userId = "131989430171992064";
     const response = await fetch(`/game_sessions/${session._id}`, {
       method: "PUT",
       headers: {
@@ -66,7 +65,7 @@ const EditGameSessionModal: React.FC<EditGameSessionModalProps> = ({
     });
 
     if (response.ok) {
-      setGameSessions(await fetchGameSessions());
+      setGameSessions(await fetchGameSessions(goodplaysUser.discordUserId));
     } else {
       console.error(
         "Failed to edit game session:",

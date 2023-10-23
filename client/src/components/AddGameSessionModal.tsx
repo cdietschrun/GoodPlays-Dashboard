@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { GoodplaysContext } from "../models/GoodplaysContextType";
 
 interface AddGameSessionModalProps {
   onCloseModal: () => void;
@@ -9,6 +10,7 @@ interface AddGameSessionModalProps {
 const AddGameSessionModal: React.FC<AddGameSessionModalProps> = ({
   onCloseModal,
 }) => {
+  const { goodplaysUser } = useContext(GoodplaysContext);
   const [gameName, setGameName] = useState("");
   const [showModal, setShowModal] = useState(false);
   const [startTimestamp, setStartTimestamp] = useState("");
@@ -36,10 +38,8 @@ const AddGameSessionModal: React.FC<AddGameSessionModalProps> = ({
 
   const handleAddGameSession = async () => {
     if (gameName) {
-      const userId = "131989430171992064";
-
       const gameSession = {
-        userId: userId,
+        userId: goodplaysUser.discordUserId,
         gameName: gameName,
         startTimestamp: startTimestamp,
         endTimestamp: endTimestamp,

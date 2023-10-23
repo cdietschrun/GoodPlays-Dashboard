@@ -1,8 +1,7 @@
 import { GameSession } from './models/GameSession';
 
-export async function fetchGameSessions(): Promise<GameSession[]> {
-    const userId = "131989430171992064";
-    const apiUrl = `/data?userId=${userId}`;
+export async function fetchGameSessions(discordUserId: string): Promise<GameSession[]> {
+    const apiUrl = `/data?userId=${discordUserId}`;
     try {
       const response = await fetch(apiUrl);
       if (!response.ok) {

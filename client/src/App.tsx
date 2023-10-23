@@ -13,25 +13,29 @@ import { GameSession } from "./models/GameSession";
 import GamePieChartPage from "./components/GamePieChartPage";
 import GameTreeMapChartPage from "./components/GameTreeMapChartPage";
 import SettingsPage from "./components/SettingsPage";
-import RegistrationPage from "./components/RegistrationPage";
 import LoginForm from "./components/LoginForm";
 import { fetchGameSessions } from "./AppUtils";
 import LogoutForm from './components/LogoutForm';
+import RegisterPage from './components/RegisterPage';
+import { GoodplaysUser } from './models/GoodplaysUser';
 
 function App() {
   const [gameSessions, setGameSessions] = useState<GameSession[]>([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [goodplaysUser, setGoodplaysUser] = useState<GoodplaysUser>({_id: "", userName: "", email: "", discordUserId: ""});
 
   useEffect(() => {
     const fetchData = async () => {
-      setGameSessions(await fetchGameSessions());
+      if (goodplaysUser) {
+        setGameSessions(await fetchGameSessions(goodplaysUser.discordUserId));
+      }
     };
 
     fetchData();
-  }, []);
+  }, [goodplaysUser]);
 
   return (
-    <GoodplaysContext.Provider value={{ gameSessions, setGameSessions, isLoggedIn, setIsLoggedIn }}>
+    <GoodplaysContext.Provider value={{ gameSessions, setGameSessions, isLoggedIn, setIsLoggedIn, goodplaysUser, setGoodplaysUser }}>
       <Router>
         <div className="app">
           <Navigation />
@@ -44,7 +48,7 @@ function App() {
             <Route path="/charts/treemap" element={ isLoggedIn? (<GameTreeMapChartPage />) : (<Navigate to="/login" replace={true} />)} />
 
             <Route path="/settings" element={isLoggedIn ? (<SettingsPage />) : (<Navigate to="/login" replace={true} />)} />
-            <Route path="/register" element={<RegistrationPage />} />
+            <Route path="/register" element={<RegisterPage />} />
             <Route path="/login" element={<LoginForm /> } />
             <Route path="/logout" element={isLoggedIn && <LogoutForm /> } 
               
