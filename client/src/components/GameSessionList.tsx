@@ -1,24 +1,47 @@
 import "../styles/GameSessionList.css";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import GameSessionCard from "./GameSessionCard";
 import { GoodplaysContext } from "../models/GoodplaysContextType";
 import AddGameSessionModal from "./AddGameSessionModal";
 import { fetchGameSessions } from "../AppUtils";
 import { faSync } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Fuse from "fuse.js";
 
 const GameSessionList: React.FC = () => {
   const { gameSessions, setGameSessions, goodplaysUser } =
     useContext(GoodplaysContext);
 
+  const [search, setSearch] = useState("");
+  const [searchResults, setSearchResults] = useState(gameSessions);
+
+  const fuseOptions = {
+    keys: ['gameName'],
+    includeScore: true,
+    threshold: 0.3,
+  };
+  const fuse = new Fuse(gameSessions, fuseOptions);
+  useEffect(() => {
+    if (search === '') {
+      setSearchResults(gameSessions);
+    } else {
+      const result = fuse.search(search);
+      const sortedResults = result.map(({ item }) => item).sort((a, b) => {
+        // Assuming endTimestamp is a Date object
+        return new Date(b.endTimestamp).getTime() - new Date(a.endTimestamp).getTime();
+      });
+      setSearchResults(sortedResults);
+    }
+  }, [search, gameSessions]);
+
   const gamesPerPage = 5;
-  const totalPages = Math.ceil(gameSessions.length / gamesPerPage);
+  const totalPages = Math.ceil(searchResults.length / gamesPerPage);
 
   const paginate = (pageNumber: number) => {
     const startIndex = (pageNumber - 1) * gamesPerPage;
     const endIndex = startIndex + gamesPerPage;
-    return gameSessions.slice(startIndex, endIndex);
+    return searchResults.slice(startIndex, endIndex);
   };
 
   const [currentPage, setCurrentPage] = useState(1);
@@ -79,6 +102,14 @@ const GameSessionList: React.FC = () => {
             </span>
           )}
         </button>
+        <br />
+
+        <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search game sessions"
+        />
         <br />
 
         {currentGameSessions.map((session, index) => (
