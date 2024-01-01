@@ -16,13 +16,15 @@ const GameSessionList: React.FC = () => {
   const [search, setSearch] = useState("");
   const [searchResults, setSearchResults] = useState(gameSessions);
 
-  const fuseOptions = {
-    keys: ['gameName'],
-    includeScore: true,
-    threshold: 0.3,
-  };
-  const fuse = new Fuse(gameSessions, fuseOptions);
+
   useEffect(() => {
+    const fuseOptions = {
+      keys: ['gameName'],
+      includeScore: true,
+      threshold: 0.3,
+    };
+    const fuse = new Fuse(gameSessions, fuseOptions);
+
     if (search === '') {
       setSearchResults(gameSessions);
     } else {
