@@ -111,7 +111,7 @@ const GameSessionList: React.FC = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         placeholder="Search game sessions, e.g. 'craft' for StarCraft, Warcraft, and World of Warcraft"
-        style={{ width: '500px' }} // Adjust the width as needed
+        style={{ width: '500px' }}
         />
         <br />
 

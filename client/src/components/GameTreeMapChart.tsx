@@ -1,7 +1,8 @@
-import React, { useContext, useEffect, useRef } from "react";
+import React, { useContext, useEffect, useMemo, useRef, useState } from "react";
 import * as d3 from "d3";
 import { GoodplaysContext } from "../models/GoodplaysContextType";
 import { GameSession } from "../models/GameSession";
+import Fuse from "fuse.js";
 
 type Data = {
   name: string;
@@ -28,10 +29,28 @@ function transformData(gameSessions: GameSession[]): Data[] {
 const GameTreeMapChart: React.FC = () => {
   const { gameSessions } = useContext(GoodplaysContext);
   const ref = useRef<SVGSVGElement>(null);
+  const [search, setSearch] = useState('');
 
+  const data = useMemo(() => {
+    const fuseOptions = {
+      keys: ['gameName'],
+      includeScore: true,
+      threshold: 0.3
+    };
+  
+    const fuse = new Fuse(gameSessions, fuseOptions);
+
+    let filteredSessions;
+    if (search) {
+      const result = fuse.search(search);
+      filteredSessions = result.map(({ item }) => item);
+    } else {
+      filteredSessions = gameSessions;
+    }
+    return transformData(filteredSessions);
+  }, [search, gameSessions]);
+  
   useEffect(() => {
-    const data = transformData(gameSessions);
-
     if (ref.current) {
       const svg = d3.select(ref.current);
 
@@ -88,7 +107,20 @@ const GameTreeMapChart: React.FC = () => {
     }
   });
 
-  return <svg ref={ref} width={1024} height={1024}></svg>;
+  return (
+    <div>
+        <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search game sessions, e.g. 'craft' for StarCraft, Warcraft, and World of Warcraft"
+        style={{ width: '500px' }}
+        />
+        <br />
+
+      <svg ref={ref} width={1024} height={1024}></svg>
+    </div>
+  );
 };
 
 export default GameTreeMapChart;

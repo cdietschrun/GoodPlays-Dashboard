@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import {
   Chart as ChartJS,
   ArcElement,
@@ -9,6 +9,7 @@ import {
 import { Pie } from "react-chartjs-2";
 import { GameSession } from "../models/GameSession";
 import { GoodplaysContext } from "../models/GoodplaysContextType";
+import Fuse from "fuse.js";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -41,12 +42,28 @@ export const data2 = {
 
 const GamePieChart: React.FC = () => {
   const { gameSessions } = useContext(GoodplaysContext);
+  const [search, setSearch] = useState('');
 
+  const fuseOptions = {
+    keys: ['gameName'],
+    includeScore: true,
+    threshold: 0.3
+  };
+
+  const fuse = new Fuse(gameSessions, fuseOptions);
+  
   function dataToChartData(
     gameSessions: GameSession[]
   ): ChartData<"pie", number[], unknown> {
+    let filteredSessions;
+    if (search) {
+      const result = fuse.search(search);
+      filteredSessions = result.map(({ item }) => item);
+    } else {
+      filteredSessions = gameSessions;
+    }
     const gameNames = [
-      ...new Set(gameSessions.map((session) => session.gameName)),
+      ...new Set(filteredSessions.map((session) => session.gameName)),
     ];
     const data = gameNames.map(
       (gameName) =>
@@ -77,7 +94,16 @@ const GamePieChart: React.FC = () => {
 
   return (
     <div>
-      <Pie data={dataToChartData(gameSessions)} />;
+        <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder="Search game sessions, e.g. 'craft' for StarCraft, Warcraft, and World of Warcraft"
+        style={{ width: '500px' }}
+        />
+        <br />
+
+        <Pie data={dataToChartData(gameSessions)} />;
     </div>
   );
 };
