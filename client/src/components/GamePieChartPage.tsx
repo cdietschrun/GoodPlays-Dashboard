@@ -6,7 +6,7 @@ const GamePieChartsPage: React.FC = () => {
   return (
     <div>
       <ChartNavigation />
-      <h2>Games Played in the Last Month</h2>
+      <h2>Games Played</h2>
       <GamePieChart />
     </div>
   );
